@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Address</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<h1>Checkout</h1>
+
+<div class="container">
+
+    <form id="msform"  method="post">
+        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+
+
+        <div class="card">
+            <div class="card-body">
+
+                <ul class="list-group">
+                    <ul class="list-group">
+                        <th:block th:each="product : ${product}">
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-3">
+                                        <img th:src="@{'/images/' + ${product.imageFileName}}" class="img-fluid" alt="Product Image">
+                                    </div>
+                                    <div class="col-9">
+                                        <h6 class="card-subtitle mb-2 text-muted" th:text="${product.name}"></h6>
+                                        <p class="card-text">
+                                            Brand: <span th:text="${product.brand}"></span><br>
+                                            <!--                        Price: $<span th:text="${cartItem.product.price}"></span><br>
+                                            -->
+
+
+                                        <p class="card-text">
+                                            <!-- Check if the product has a deal -->
+                                            <span th:if="${product.deal != null}">
+        Discounted Price: $<span th:text="${product.discountedPrice}"></span>
+    </span>
+                                            <!-- If the product does not have a deal, display the original price -->
+                                            <span th:unless="${product.deal != null}">
+        Price: $<span th:text="${product.price}"></span>
+    </span>
+                                        </p>
+
+
+
+
+<!--                                        Quantity: <span th:text="${product.quantity}"></span> Qty-->
+                                        </p>
+                                    </div>
+                                </div>
+                            </li>
+                        </th:block>
+                    </ul>
+            </div>
+
+
+            <h4> Order Summery</h4>
+            <h6>ProductValue: <span th:text="${product.price}"></span></h6>
+            <h6>Shipping Charges: <span th:text="${shipping}"></span></h6>
+            <h6>Total Amount: <span  th:text="${finalprice}"></span></h6>
+    </form>
+</div><br>
+<h3>Select Shipping Address</h3>
+<!--<form id="msform" action="/buynowpayment" method="get">-->
+<!--    <select name="addressId" required>-->
+<!--        <option th:each="address : ${addresses}" th:value="${address.id}" th:text="${address.addressLine1 + ', ' + address.city + ', ' + address.state + ', ' + address.country +',' +address.zipCode}"></option>-->
+<!--    </select>-->
+
+
+<!--    <a href="/addAddress" class="btn btn-secondary">Add New Address</a>-->
+
+
+
+
+
+
+
+
+
+
+<form id="msform" action="/buynowpayment" method="get">
+    <div class="address-box">
+        <th:block th:each="address : ${addresses}">
+            <label> <input type="radio" name="addressId" th:value="${address.id}" required> <b> <span th:text="${address.name + ' - ' + address.mobile}"></span></b> <br>
+                <span th:text="${address.addressLine1 + ', ' + address.city + ', ' + address.state + ', ' + address.country +', ' +address.zipCode}"></span>
+            </label>
+            <a th:href="@{'/editAddress/' + ${address.id}}"> <i class="fas fa-edit"></i></a>
+            <a th:href="@{'/deleteAddress/' + ${address.id}}" style="color: red;"> <i class="fas fa-trash-alt"></i></a>
+            <br><br>
+        </th:block>
+    </div>
+    <a href="/addAddress" class="btn btn-primary btn-block">Add New Address</a>
+    
+    <button th:each="product : ${product}" name="productId" th:value="${product.id}" type="submit" class="btn btn-block mt-3" style="background-color:#FF4500;">Proceed to Payment</button>
+</form>
+
+
+
+
+
+
+
+
+
+
+
+
+<!--    <br><br>-->
+<!--    <a type="button" th:href="@{/buynowpayment(id=${product.id})}" class="btn btn-primary" >Proceed to Payment</a>-->
+<!--</form>-->
+
+
+<!--  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+ <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.1/dist/umd/popper.min.js"></script>
+ <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html> -->
+<script
+        src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script
+        src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+<script
+        src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+<!-- razorpay -->
+
+
+<script type="text/javascript">
+    function doPost(path, requestObject, isAsync) {
+        var resp;
+        $.ajax({
+            url : path,
+            type : 'POST',
+            data : requestObject,
+            contentType : "application/json; charset=UTF-8",
+            async : isAsync,
+            success : function(data) {
+                resp = JSON.parse(data)
+            }
+        })
+        return resp;
+    }
+</script>
+
+<script>
+    var resp = null;
+
+    /**
+        Manual Checkout for Razor Pay
+     **/
+
+    var options = {
+        "key" : "",
+        "amount" : "",
+        "name" : "",
+        "description" : "",
+        "image" : "",
+        "order_id" : "",
+        "handler" : function(response) {
+            alert(response.razorpay_payment_id);
+            $('#msform')[0].reset();
+            $('#pay-success').show();
+
+        },
+        "prefill" : {
+            "name" : "",
+            "email" : ""
+        },
+        "notes" : {
+            "address" : ""
+        },
+        "theme" : {
+            "color" : ""
+        },
+         "method": {
+                "upi": true, // Enable BHIM UPI
+                "wallet": true, // Enable wallets (Google Pay, PhonePe, etc.)
+                "card": true // Enable card payments
+        }
+    };
+
+    function setAmountToTotal() {
+        var total = document.getElementById('total').value;
+        document.getElementById('amount').value = total;
+    }
+
+    window.onload = function() {
+        setAmountToTotal();
+    };
+
+    document.getElementById('rzp-button1').onclick = function(e) {
+
+         var requiredFields = ['customerName', 'email', 'phoneNumber', 'localAddress', 'permanentAddress', 'amount'];
+            for (var i = 0; i < requiredFields.length; i++) {
+                var field = requiredFields[i];
+                if (!document.getElementById(field).value) {
+                    alert("Please fill in all required fields.");
+                    return;
+                }
+            }
+
+        setAmountToTotal();
+
+        var reqObject = $('#msform').serializeArray();
+        var indexedReqObj = {};
+        $.map(reqObject, function(n, i) {
+            indexedReqObj[n['name']] = n['value'];
+        });
+
+        $.ajax({
+            url : "/storeFormData",
+            type : "POST",
+            contentType : "application/json",
+            data : JSON.stringify(indexedReqObj),
+            success : function(response) {
+                // Handle success response if needed
+                console.log("Form data stored successfully");
+            },
+            error : function(xhr, status, error) {
+                // Handle error response if needed
+                console.error("Error storing form data: " + error);
+            }
+        });
+
+        resp = doPost("/createPayment", JSON.stringify(indexedReqObj),
+                false);
+        if (resp.statusCode == 200) {
+            options.key = resp.razorPay.secretKey;
+            options.order_id = resp.razorPay.razorpayOrderId;
+            options.amount = resp.razorPay.applicationFee; //paise
+            options.name = resp.razorPay.merchantName;
+            options.description = resp.razorPay.purchaseDescription;
+            options.image = resp.razorPay.imageURL;
+            options.prefill.name = resp.razorPay.customerName;
+            options.prefill.email = resp.razorPay.customerEmail;
+            options.notes.address = resp.razorPay.notes;
+            options.theme.color = resp.razorPay.theme;
+            var rzp1 = new Razorpay(options);
+            rzp1.open();
+            e.preventDefault();
+        } else {
+            //do something else
+        }
+    }
+</script>
+</body>
+</html>

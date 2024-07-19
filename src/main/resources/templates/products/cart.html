@@ -1,0 +1,885 @@
+<!-- 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Cart</title>
+  Bootstrap CSS
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
+  Custom CSS
+  <style>
+    .cart-item {
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 10px;
+    }
+
+    .card-subtitle {
+      font-size: 14px;
+    }
+
+    .card-text {
+      font-size: 12px;
+    }
+
+    .btn-danger {
+      background-color: #dc3545;
+      border-color: #dc3545;
+    }
+
+    .btn-danger:hover {
+      background-color: #c82333;
+      border-color: #bd2130;
+    }
+
+    .cart-total {
+      background-color: #f8f9fa;
+      border-radius: 5px;
+      padding: 10px;
+      margin-top: 15px;
+      text-align: right;
+    }
+
+    .checkout-btn {
+      background-color: #007bff;
+      border-color: #007bff;
+      color: #fff;
+    }
+
+    .checkout-btn:hover {
+      background-color: #0056b3;
+      border-color: #0056b3;
+    }
+
+    /* Custom styles for quantity update buttons */
+    .quantity-update-btn {
+      font-size: 16px;
+      padding: 2px 6px;
+      border-radius: 3px;
+      margin-right: 5px;
+     
+      border: none;
+    }
+
+
+
+.quantity-input {
+      width: 40px; /* Square shape for quantity input */
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      text-align: center;
+    }
+
+    .quantity-btn {
+      width: 30px; /* Circular shape for + and - buttons */
+      height: 30px;
+      border-radius: 50%;
+      border: none;
+      
+      font-size: 14px;
+      margin-left: 5px;
+    }
+
+   
+
+    .quantity-update-btn:hover {
+      background-color: #0056b3;
+    }
+    
+    /* languages banned hide css */
+
+.goog-te-banner-frame {
+    display:none !important
+    }
+  
+  .skiptranslate {
+    display:none !important
+    }
+    body {
+ top: 0px !important; 
+}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6 offset-md-3">
+        <div class="card mb-3">
+          <div class="card-header " style="background-color: #ADD8E6;color: black;">
+
+
+<h4 class="card-title text-center">
+    Welcome, <span th:text="${#authentication.principal.name}"></span>!&nbsp;    Here is your cart!
+</h4>
+
+          </div>
+          <div class="card-body">
+            Iterate over cart items and display each item
+            <div th:each="cartItem : ${cartItems}" class="row cart-item mb-3">
+              <div class="col-3">
+<a th:href="@{cart/viewproduct(id=${cartItem.product.id})}"><img th:src="@{'/images/' + ${cartItem.product.imageFileName}}" class="img-fluid" alt="Product Image"></a>              </div>
+              <div class="col-5">
+                <h6 class="card-subtitle mb-2 text-muted" th:text="${cartItem.product.name}"></h6>
+                
+                
+                <p class="card-text">
+    Check if the product has a deal
+    <span th:if="${cartItem.product.deal != null}">
+        Discounted Price: $<span th:text="${cartItem.product.discountedPrice}"></span>
+    </span>
+    If the product does not have a deal, display the original price
+    <span th:unless="${cartItem.product.deal != null}">
+        Price: $<span th:text="${cartItem.product.price}"></span>
+    </span>
+</p>
+
+                <p class="card-text">Quantity: 
+                  <form th:action="@{/cart/updateQuantity}" method="post">
+                    <input type="hidden" name="cartItemId" th:value="${cartItem.id}">
+                    <button type="submit" name="quantityChange" value="-1" class="quantity-update-btn">-</button>
+                    <span th:text="${cartItem.quantity}"></span>
+                    <button type="submit" name="quantityChange" value="1" class="quantity-update-btn">+</button>
+                  </form>
+                </p>
+              </div>
+             <div class="col-2">
+                <p class="card-text">Total: $<span th:text="${cartItem.quantity * cartItem.product.price}"></span></p>
+              </div>
+              
+              <div class="col-2">
+    Check if the product has a deal
+    <p class="card-text" th:if="${cartItem.product.deal != null}">
+        Total: $<span th:text="${cartItem.quantity * cartItem.product.discountedPrice}"></span>
+    </p>
+    If the product does not have a deal, calculate the total based on the original price
+    <p class="card-text" th:unless="${cartItem.product.deal != null}">
+        Total: $<span th:text="${cartItem.quantity * cartItem.product.price}"></span>
+    </p>
+</div>
+
+              <div class="col-2">
+                <form action="/cart/remove" method="post">
+                  <input type="hidden" name="cartItemId" th:value="${cartItem.id}">
+                  <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+                </form>
+              </div>
+            </div>
+            Total Price
+            <div class="row cart-total">
+              <div class="col">
+                <h6 class="card-subtitle mb-2 text-muted">Total:</h6>
+                <h5 class="card-title">$<span th:text="${totalCartPrice}"></span></h5>
+              </div>
+            </div>
+             <div class="row mt-3">
+              <div class="col-md-6 mb-3">
+				   
+                <a href="/" class="btn btn-primary btn-block">Continue Shopping</a>
+              </div>
+               
+
+              <div class="col-md-6" th:if="${totalCartPrice!=0}" >
+               <a href="/checkout" class="btn checkout-btn btn-block">Proceed to Checkout</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+google languages script
+
+  <script type="text/javascript"> 
+   function googleTranslateElementInit() {
+  new google.translate.TranslateElement({pageLanguage: 'en'}, 'google_translate_element');
+  }
+</script>
+
+<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+                  
+    
+  
+  
+
+
+
+  Bootstrap JS and dependencies
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+</body>
+</html>
+ -->
+ 
+ 
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Cart</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Custom CSS -->
+  <style>
+  
+  body{
+     margin:0px;
+     pafdding:10px;
+     background-image:url("https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D");
+     background-repeat:no-repeat;
+     background-position: center;
+     background-attachment: fixed;
+     background-size:cover;
+  }
+ 
+    .cart-item {
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 10px;
+    }
+
+    .card-subtitle {
+      font-size: 25px;
+      color:darkgray;
+    }
+
+    .card-text {
+      font-size: 15px;
+    }
+
+    .btn-danger {
+      background-color: #dc3545;
+      border-color: #dc3545;
+    }
+
+    .btn-danger:hover {
+      background-color: #c82333;
+      border-color: #bd2130;
+    }
+
+    .cart-total {
+      background-color: #f8f9fa;
+      border-radius: 5px;
+      padding: 10px;
+      margin-top: 15px;
+      text-align: right;
+    }
+
+    .checkout-btn {
+      background-color: #0056b3;
+      border-color:  #0056b3;
+      color: white;
+    }
+
+    .checkout-btn:hover {
+      background-color: deeppink;
+      border-color: #0056b3;
+    }
+
+    /* Custom styles for quantity update buttons */
+    .quantity-update-btn {
+      font-size: 16px;
+      padding: 2px 6px;
+      border-radius: 3px;
+      margin-right: 5px;
+     
+      border: none; /* style="background-color: #ADD8E6;color: black;*/
+    }
+
+
+
+.quantity-input {
+      width: 40px; /* Square shape for quantity input */
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      text-align: center;
+    }
+
+    .quantity-btn {
+      width: 30px; /* Circular shape for + and - buttons */
+      height: 30px;
+      border-radius: 50%;
+      border: none;
+      
+      font-size: 14px;
+      margin-left: 5px;
+    }
+
+   
+
+    .quantity-update-btn:hover {
+      background-color: #0056b3;
+    }
+    
+    /* languages banned hide css */
+
+.goog-te-banner-frame {
+    display:none !important
+    }
+  
+  .skiptranslate {
+    display:none !important
+    }
+   .navbar {
+    background-color: #ADD8E6;
+}
+
+.jumbotron {
+    background-color: #f8f9fa;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+.navbar ul li a{
+ font-weight: 400;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+}
+
+.card-body {
+    background-color: #fff;
+}
+
+.card-body:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-nav {
+    display: flex;
+    list-style: none;
+    padding: 0;
+}
+
+.nav-item {
+    position: relative;
+    margin-right: 10px;
+}
+
+.dropdown {
+    position: relative;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+}
+
+.nav-item:hover .dropdown-menu {
+    display: block;
+}
+
+.dropdown-submenu {
+    position: relative;
+    padding-bottom: 15px;
+}
+
+.dropdown-submenu .dropdown-menu {
+    top: 0;
+    left: 100%;
+    margin-top: -1px;
+}
+
+.dropdown-item:hover {
+    background-color: aliceblue;
+    color: black;
+}
+/* location css */
+#addressContainer {
+    display: none;
+    position: absolute;
+    top: calc(100% + 3px);
+    right: 80px;
+    width: 200px;
+    background-color: #f4f4f4;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-size: 14px;
+    z-index: 999;
+}
+
+.profileDrop :hover{
+background-image: linear-gradient( 109.6deg,  rgba(62,161,219,1) 11.2%, rgba(93,52,236,1) 100.2% );
+color:white;
+}
+.first:hover svg {
+  transform: rotate(360deg);
+  transition: transform 0.59s ease;
+}
+.second:hover svg {
+  transform: rotate(360deg);
+  transition: transform 0.59s ease;
+}
+.third:hover svg {
+  transform: rotate(360deg);
+  transition: transform 0.59s ease;
+}
+.fourth:hover svg {
+  transform: rotate(360deg);
+  transition: transform 0.59s ease;
+}
+.fifth:hover svg {
+  transform: rotate(360deg);
+  transition: transform 0.59s ease;
+}
+  .navbar-custom {
+            background-color: #515d69;
+        }
+        .navbar-custom .nav-link {
+            color: #fff;
+        }
+        .navbar-custom .dropdown-menu {
+            background-color: #30612f;
+
+
+        }
+        .navbar-custom .dropdown-item {
+            color: #fff;
+        }
+        .navbar-custom .dropdown-item:hover {
+            background-color: #d4cf9d;
+            border-left:5px solid orange;
+            border-right:5px solid orange;
+        }
+
+
+
+
+
+        .dropdown-toggle::after {
+  transform: rotate(0deg);
+  transition: transform 0.5s;
+}
+
+.dropdown:hover .dropdown-toggle::after {
+  transform: rotate(180deg);
+}
+
+.dropdown-submenu.dropdown-toggle::after {
+  transform: rotate(0deg);
+  transition: transform 0.5s;
+}
+
+.dropdown-submenu:hover .dropdown-toggle::after {
+  transform: rotate(270deg);
+}
+
+
+
+
+
+
+
+
+
+
+    .profileDrop :hover{
+background-image: linear-gradient(90deg, #FDC830,#F37335);
+color:white;
+}
+
+    .first:hover svg {
+  transform: rotate(360deg);
+  transition: transform 0.59s ease;
+}
+.second:hover svg {
+  transform: rotate(360deg);
+  transition: transform 0.59s ease;
+}
+.third:hover svg {
+  transform: rotate(360deg);
+  transition: transform 0.59s ease;
+}
+.fourth:hover svg {
+  transform: rotate(360deg);
+  transition: transform 0.59s ease;
+}
+.fifth:hover svg {
+  transform: rotate(360deg);
+  transition: transform 0.59s ease;
+}
+   
+  </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-light navbar-custom sticky-top" style="background-image: linear-gradient(90deg, #006241,#1DB954);color: black;">
+
+<div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+
+
+
+
+
+
+    <a class="navbar-brand " href="#">My Mart</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse " id="navbarNavDropdown">
+        <ul class="navbar-nav ">
+            <li class="nav-item" th:each="navbarItem : ${navbarWithDropdownData}">
+                <div class="dropdown">
+                    <a th:if="${#lists.isEmpty(navbarItem.value)}"
+                       class="nav-link text-light"
+                       th:href="${navbarItem.key != null ? (navbarItem.key.itemName == 'Admin' ? '/Admin/' + navbarItem.key.itemName : navbarItem.key.itemName) : ''}"
+                       th:text="${navbarItem.key != null ? navbarItem.key.itemName : ''}">
+                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bag-check" viewBox="0 0 16 16">
+  <path fill-rule="evenodd" d="M10.854 8.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708L7.5 10.793l2.646-2.647a.5.5 0 0 1 .708 0"/>
+  <path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1m3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4zM2 5h12v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1z"/>
+</svg>
+                    </a>
+
+                    <a th:if="${not #lists.isEmpty(navbarItem.value)}"
+                       class="nav-link dropdown-toggle text-light"
+                       href="#"
+                       id="navbarDropdown"
+                       role="button"
+                       data-toggle="dropdown"
+                       aria-haspopup="true"
+                       aria-expanded="false"
+                       th:text="${navbarItem.key != null ? navbarItem.key.itemName : ''}">
+                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bag-check" viewBox="0 0 16 16">
+  <path fill-rule="evenodd" d="M10.854 8.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708L7.5 10.793l2.646-2.647a.5.5 0 0 1 .708 0"/>
+  <path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1m3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4zM2 5h12v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1z"/>
+</svg>
+                    </a>
+
+                    <div class="dropdown-menu " aria-labelledby="navbarDropdown" style="background-color:#30612f;">
+                        <div th:each="dropdownItem : ${navbarItem.value}">
+                            <div class="dropdown-submenu"style="background-color:#30612f;">
+                                <a class="dropdown-item dropdown-toggle" href="#" th:href="${dropdownItem.itemName == 'Admin' ? '/Admin/' + dropdownItem.itemName : '/User/' + dropdownItem.itemName}" th:text="${dropdownItem.itemName}"></a>
+                                <div class="dropdown-menu"style="background-color:#30612f;">
+                                    <div th:each="dropChild : ${dropdownItem.dropChildren}">
+                                        <div class="dropdown-submenu"style="background-color:#30612f;">
+                                            <a class="dropdown-item dropdown-toggle" href="#" th:href="${dropChild.itemName == 'Admin' ? '/Admin/' + dropChild.itemName : '/User/' + dropChild.itemName}" th:text="${dropChild.itemName}"></a>
+                                            <div class="dropdown-menu"style="background-color:#30612f;">
+                                                <div th:each="dropChildOfChild : ${dropChild.dropChildrenOfChild}">
+                                                    <div class="dropdown-submenu">
+                                                        <a class="dropdown-item dropdown-toggle" href="#" th:href="${dropChildOfChild.itemName == 'Admin' ? '/Admin/' + dropChildOfChild.itemName : '/User/' + dropChildOfChild.itemName}" th:text="${dropChildOfChild.itemName}"></a>
+                                                        <div class="dropdown-menu"style="background-color:#30612f;">
+                                                            <a class="dropdown-item" th:each="grandChild : ${dropChildOfChild.grandChildren}" th:href="${grandChild.itemName == 'Admin' ? '/Admin/' + grandChild.itemName : '/User/' + grandChild.itemName}" th:text="${grandChild.itemName}"></a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+
+
+
+           <!-- Search Bar  -->
+            <form class="form-inline my-2 my-lg-0"   id="labnol" action="/search" method="get">
+    <input class="form-control mr-sm-1" type="search"  id="transcript" name="query" placeholder="Search" aria-label="Search" style="width: 220px;">
+    <svg onclick="startDictation(),play()"  xmlns="http://www.w3.org/2000/svg" width="27" height="27"  fill="currentColor" class="bi bi-mic" viewBox="0 0 16 16"  style="color:    #191570;" >
+  <path d="M3.5 6.5A.5.5 0 0 1 4 7v1a4 4 0 0 0 8 0V7a.5.5 0 0 1 1 0v1a5 5 0 0 1-4.5 4.975V15h3a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1h3v-2.025A5 5 0 0 1 3 8V7a.5.5 0 0 1 .5-.5"/>
+  <path d="M10 8a2 2 0 1 1-4 0V3a2 2 0 1 1 4 0zM8 0a3 3 0 0 0-3 3v5a3 3 0 0 0 6 0V3a3 3 0 0 0-3-3"/>
+</svg>
+    <button class="btn btn-primary my-2 my-sm-0" type="submit">Search</button> <br>
+</form>
+
+
+
+
+
+<!-- Speech Recognition  -->
+<script>
+  function startDictation() {
+    if (window.hasOwnProperty('webkitSpeechRecognition')) {
+      var recognition = new webkitSpeechRecognition();
+
+      recognition.continuous = false;
+      recognition.interimResults = false;
+
+      recognition.lang = 'en-US';
+      recognition.start();
+recognition.onresult = function (e) {
+        document.getElementById('transcript').value = e.results[0][0].transcript;
+        recognition.stop();
+        document.getElementById('labnol').submit();
+      };
+
+      recognition.onerror = function (e) {
+        recognition.stop();
+      };
+    }
+  }
+<!-- beep sound code--->
+        function play() {
+            var audio = new Audio(
+'https://media.geeksforgeeks.org/wp-content/uploads/20190531135120/beep.mp3');
+            audio.play();
+        }
+    </script>
+
+
+</div>
+
+
+
+
+
+
+            <ul class="navbar-nav ml-4">
+                <li class="nav-item dropdown">
+
+                    <a class="nav-link text-dark" id="locationButton"><i class="fas fa-map-marker-alt" style="color: blue;"></i> Location</a>
+                </li>
+
+
+         <div   id="addressContainer"></div>
+
+                   <script>
+  document.getElementById('locationButton').addEventListener('click', function() {
+
+    navigator.geolocation.getCurrentPosition(function(position) {
+      var latitude = position.coords.latitude;
+      var longitude = position.coords.longitude;
+
+
+      fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`)
+        .then(response => response.json())
+        .then(data => {
+          var address = data.display_name;
+          document.getElementById('addressContainer').textContent = 'Your current address: ' + address;
+          document.getElementById('addressContainer').style.display = 'block';
+        })
+        .catch(error => {
+          console.error('Error fetching address:', error);
+        });
+    });
+  });
+</script>
+
+
+
+
+
+
+<li class="nav-item dropdown" th:if="${#authorization.expression('isAuthenticated()')}">
+
+    <a class="nav-link dropdown-toggle text-dark" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <span class="dropdown-icon">
+            <i class="fas fa-user-circle fa-lg" style="color: #007bff;"></i>
+        </span>
+        <span th:text="${#authentication.principal.name}"></span>
+    </a>
+   <div class="dropdown-menu profileDrop"
+                    aria-labelledby="navbarDropdownMenuLink">
+                    <a class="dropdown-item first"
+                        th:href="@{/profiles(name=${#authentication.principal.name})}"><svg
+                        xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                            fill="currentColor" class="bi bi-person-circle"
+                            viewBox="0 0 16 16"><path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" /><path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
+                            </svg>&nbsp My Profile</a>
+
+                    <a class="dropdown-item second" href="/wishlist/view"><svg
+                          xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart-fill" viewBox="0 0 16 16">
+                          <path fill-rule="evenodd"d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314" />
+                          </svg>&nbsp Wishlist</a>
+
+                    <a class="dropdown-item third" href="/cart"> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                            fill="currentColor" class="bi bi-cart-fill" viewBox="0 0 16 16"><path
+                            d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2" />
+                            </svg>&nbsp Cart</a>
+
+                     <a class="dropdown-item fourth" href="/orders"> <svg
+                            xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                            fill="currentColor" class="bi bi-box-seam-fill"
+                            viewBox="0 0 16 16"> <path fill-rule="evenodd"
+                           d="M15.528 2.973a.75.75 0 0 1 .472.696v8.662a.75.75 0 0 1-.472.696l-7.25 2.9a.75.75 0 0 1-.557 0l-7.25-2.9A.75.75 0 0 1 0 12.331V3.669a.75.75 0 0 1 .471-.696L7.443.184l.01-.003.268-.108a.75.75 0 0 1 .558 0l.269.108.01.003zM10.404 2 4.25 4.461 1.846 3.5 1 3.839v.4l6.5 2.6v7.922l.5.2.5-.2V6.84l6.5-2.6v-.4l-.846-.339L8 5.961 5.596 5l6.154-2.461z" />
+                          </svg>&nbsp My Orders</a>
+                     <a class="dropdown-item fifth" href="/logout"> <svg
+                            xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                            fill="currentColor" class="bi bi-box-arrow-right"
+                            viewBox="0 0 16 16"> <path fill-rule="evenodd"    d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0z" />
+                            <path fill-rule="evenodd"
+                                d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z" />
+                           </svg> &nbsp Logout</a>
+                </div>
+        </li>
+
+        <li class="nav-item" th:unless="${#authorization.expression('isAuthenticated()')}">
+
+                <a class="nav-link text-dark " href="/login/profile/" role="button"  aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-user-circle fa-lg" style="color: #007bff;"></i> Login
+                </a>
+
+                <li class="nav-item">
+                    <a class="nav-link text-dark" href="/cart"><i class="fas fa-shopping-cart fa-lg" style="color:red"></i> Cart</a>
+                </li>
+
+
+
+                <li class="nav-item" th:if="${#authorization.expression('isAuthenticated()')}">
+    <a class="nav-link text-dark" th:href="@{/logout}">
+        <i class="fas fa-sign-out-alt fa-lg" style="color: #007bff;"></i> Logout
+    </a>
+</li>
+             </ul>
+        </div>
+    </nav>
+
+
+
+  <div class="container">
+  
+    <div class="row my-5 gy-5">
+      <div class="col-md-6 offset-md-3">
+        <div class="card mb-3">
+          <div class="card-header" style="background-color: deeppink;color: black;" >
+
+
+<h4 class="card-title text-center">
+    Welcome, <span th:text="${#authentication.principal.name}"></span>!&nbsp;    Here is your cart!
+</h4>
+
+          </div>
+          <div class="card-body" style="background-color: lightgray;color: black;" > 
+            <!-- Iterate over cart items and display each item -->
+            <div th:each="cartItem : ${cartItems}" class="row cart-item mb-3">
+              <div class="col-3">
+<a th:href="@{cart/viewproduct(id=${cartItem.product.id})}"><img th:src="@{'/images/' + ${cartItem.product.imageFileName}}" class="img-fluid" alt="Product Image"></a>              </div>
+              <div class="col-5">
+                <h6 class="card-subtitle mb-2 text-muted" th:text="${cartItem.product.name}"></h6>
+                
+                
+                <p class="card-text">
+    <!-- Check if the product has a deal -->
+    <span th:if="${cartItem.product.deal != null}">
+        Discounted Price: $<span th:text="${cartItem.product.discountedPrice}"></span>
+    </span>
+    <!-- If the product does not have a deal, display the original price -->
+    <span th:unless="${cartItem.product.deal != null}">
+        Price: $<span th:text="${cartItem.product.price}"></span>
+    </span>
+</p>
+
+                <p class="card-text">Quantity: 
+                  <form th:action="@{/cart/updateQuantity}" method="post">
+                    <input type="hidden" name="cartItemId" th:value="${cartItem.id}">
+                    <button type="submit" name="quantityChange" value="-1" class="quantity-update-btn">-</button>
+                    <span th:text="${cartItem.quantity}"></span>
+                    <button type="submit" name="quantityChange" value="1" class="quantity-update-btn">+</button>
+                  </form>
+                </p>
+              </div>
+             <!-- <div class="col-2">
+                <p class="card-text">Total: $<span th:text="${cartItem.quantity * cartItem.product.price}"></span></p>
+              </div>-->
+              
+              <div class="col-2">
+    <!-- Check if the product has a deal -->
+    <p class="card-text" th:if="${cartItem.product.deal != null}">
+        Total: $<span th:text="${cartItem.quantity * cartItem.product.discountedPrice}"></span>
+    </p>
+    <!-- If the product does not have a deal, calculate the total based on the original price -->
+    <p class="card-text" th:unless="${cartItem.product.deal != null}">
+        Total: $<span th:text="${cartItem.quantity * cartItem.product.price}"></span>
+    </p>
+</div>
+
+              <div class="col-2">
+                <form action="/cart/remove" method="post">
+                  <input type="hidden" name="cartItemId" th:value="${cartItem.id}">
+                  <button type="submit" class="btn btn-danger" style="background-color:orangered">Remove</button>
+                </form>
+              </div>
+            </div>
+            <!-- Total Price -->
+            <div class="row cart-total">
+              <div class="col">
+                <h6 class="card-subtitle mb-2 text-muted">Total:</h6>
+                <h5 class="card-title">$<span th:text="${totalCartPrice}"></span></h5>
+              </div>
+            </div>
+             <div class="row mt-3">
+              <div class="col-md-6 mb-3">
+				   
+                <a href="/" class="btn  btn-block" style="background-color:deeppink">Continue Shopping</a>
+              </div>
+               
+
+              <div class="col-md-6" th:if="${totalCartPrice!=0}" >
+               <a href="/checkout" class="btn  btn-block" style="background-color:deeppink">Proceed to Checkout</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+<!-- google languages script -->
+
+  <script type="text/javascript"> 
+   function googleTranslateElementInit() {
+  new google.translate.TranslateElement({pageLanguage: 'en'}, 'google_translate_element');
+  }
+</script>
+<script>
+  $(document).ready(function(){
+        // Hide all dropdown menus initially
+        $('.dropdown-menu').hide();
+
+        // When hovering over a nav-link dropdown-toggle, show its dropdown-menu and hide others
+        $('.nav-link.dropdown-toggle').hover(function(){
+            $('.dropdown-menu').hide();
+            $(this).next('.dropdown-menu').show();
+        });
+
+        // When hovering over a dropdown-item dropdown-toggle, show its dropdown-menu and hide others
+        $('.dropdown-item.dropdown-toggle').hover(function(){
+            $(this).closest('.dropdown-menu').find('.dropdown-menu').hide();
+            $(this).next('.dropdown-menu').show();
+        });
+
+        // Hide dropdown menus when mouse is not hovering over any dropdown
+        $('.dropdown').mouseleave(function() {
+            $('.dropdown-menu').hide();
+        });
+    });
+
+</script>
+<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+                  
+    
+  
+  
+
+
+
+  <!-- Bootstrap JS and dependencies -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+</body>
+</html>
+
+ 

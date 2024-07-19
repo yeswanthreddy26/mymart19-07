@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard</title>
+<link
+    href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+    rel="stylesheet">
+<link href="styles.css" rel="stylesheet">
+
+<link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+<link
+    href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+    rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script
+    src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+<script
+    src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+<style>
+.card-container .row {
+    width: 100%;
+}
+
+.card-container .col-md-4 {
+    flex: auto;
+}
+
+.cardsrowcontainer {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.card {
+    width: 15rem;
+}
+
+.col {
+    display: flex;
+    justify-content: center;
+}
+
+body {
+    background: radial-gradient(circle, #d1c4e9, #bbdefb);
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+.carousel-control-prev {
+    background: radial-gradient(circle, #d1c4e9, #bbdefb);
+}
+
+.carousel-control-next {
+    background: radial-gradient(circle, #d1c4e9, #bbdefb);
+}
+
+.horizontalNav {
+    background-image: radial-gradient(circle farthest-corner at 10% 20%, rgba(38, 51, 97, 1)
+        0%, rgba(65, 143, 222, 1) 79%);
+}
+
+.navbar-nav {
+    display: flex;
+    list-style: none;
+    padding: 0;
+}
+
+.nav-item {
+    position: relative;
+    margin-right: 10px;
+}
+
+.dropdown {
+    position: relative;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+}
+
+.nav-item:hover .dropdown-menu {
+    display: block;
+}
+
+.dropdown-submenu {
+    position: relative;
+    padding-bottom: 15px;
+}
+
+.dropdown-submenu .dropdown-menu {
+    top: 0;
+    left: 100%;
+    margin-top: -1px;
+}
+
+.dropdown-item:hover {
+    background-color: aliceblue;
+    color: black;
+}
+/*Sidebar toggle css*/
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+@media screen and (max-width: 768px) {
+    .sidebar {
+        left: -100%;
+    }
+}
+
+.close-btn {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    font-size: 34px;
+    background: none;
+    border: none;
+    color: black;
+    cursor: pointer;
+}
+
+.open-btn {
+    background-color: #2b11d2;
+    color: #ffffff;
+    padding: 10px 20px;
+    border: none;
+    font-size: 20px;
+    margin-top: 5px;
+}
+
+.sidebar li a:hover {
+    background-image: radial-gradient(circle farthest-corner at 10% 20%, rgba(37, 145, 251,
+        0.98) 0.1%, rgba(0, 7, 128, 1) 99.8%);
+}
+</style>
+
+
+
+
+</head>
+<body>
+
+    <nav
+        class="navbar navbar-expand-lg navbar-light navbar-custom sticky-top"
+        style="background-image: linear-gradient(90deg, #006241, #1DB954); color: black;">
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+            <ul class="navbar-nav">
+
+                <li class="nav-item"
+                    th:each="navbarItem : ${navbarWithDropdownData}">
+
+                    <div class="dropdown">
+
+                        <a th:if="${#lists.isEmpty(navbarItem.value)}"
+                            class="nav-link text-light"
+                            th:href="${navbarItem.key != null ? '/Admin/' + navbarItem.key.itemName : ''}"
+                            th:text="${navbarItem.key != null ? navbarItem.key.itemName : ''}"></a>
+
+
+
+                        <a th:if="${not #lists.isEmpty(navbarItem.value)}"
+                            class="nav-link dropdown-toggle text-light" href="#"
+                            id="navbarDropdown" role="button" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false"
+                            th:text="${navbarItem.key != null ? navbarItem.key.itemName : ''}"></a>
+
+
+
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+
+                            <div th:each="dropdownItem : ${navbarItem.value}">
+
+                                <div class="dropdown-submenu">
+
+                                    <a class="dropdown-item dropdown-toggle" href="#"
+                                        th:href="${dropdownItem.itemName == 'Admin' ? '/Admin/' + dropdownItem.itemName : '/Admin/' + dropdownItem.itemName}"
+                                        th:text="${dropdownItem.itemName}"></a>
+
+                                    <div class="dropdown-menu">
+
+                                        <div th:each="dropChild : ${dropdownItem.dropChildren}">
+
+                                            <div class="dropdown-submenu">
+
+                                                <a class="dropdown-item dropdown-toggle" href="#"
+                                                    th:href="${dropChild.itemName == 'Admin' ? '/Admin/' + dropChild.itemName : '/Admin/' + dropChild.itemName}"
+                                                    th:text="${dropChild.itemName}"></a>
+
+                                                <div class="dropdown-menu">
+
+                                                    <div
+                                                        th:each="dropChildOfChild : ${dropChild.dropChildrenOfChild}">
+
+                                                        <div class="dropdown-submenu">
+
+                                                            <a class="dropdown-item dropdown-toggle" href="#"
+                                                                th:href="${dropChildOfChild.itemName == 'Admin' ? '/Admin/' + dropChildOfChild.itemName : '/Admin/' + dropChildOfChild.itemName}"
+                                                                th:text="${dropChildOfChild.itemName}"></a>
+
+                                                            <div class="dropdown-menu">
+
+                                                                <a class="dropdown-item"
+                                                                    th:each="grandChild : ${dropChildOfChild.grandChildren}"
+                                                                    th:href="${grandChild.itemName == 'Admin' ? '/Admin/' + grandChild.itemName : '/Admin/' + grandChild.itemName}"
+                                                                    th:text="${grandChild.itemName}"></a>
+
+                                                            </div>
+
+                                                        </div>
+
+                                                    </div>
+
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </li>
+
+            </ul>
+            <form class="form-inline my-2 my-lg-0">
+                <input class="form-control mr-sm-2" type="search"
+                    placeholder="Search" aria-label="Search" style="width: 430px;">
+                <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Search</button>
+            </form>
+            <ul class="navbar-nav ml-4">
+                <li class="nav-item"><a th:href="@{/Admin/Navbar}"
+                    class="btn btn-primary text-dark text-decoration-none">Navbar</a></li>
+                <li class="nav-item"><span sec:authorize="isAuthenticated">
+
+                        <a th:href="@{/logout}"
+                        class="btn btn-outline-light text-dark text-decoration-none">Logout</a>
+
+                </span></li>
+
+
+
+
+            </ul>
+
+        </div>
+
+    </nav>
+
+
+    <script>
+
+  $(document).ready(function(){
+
+        // Hide all dropdown menus initially
+
+        $('.dropdown-menu').hide();
+
+
+
+        // When hovering over a nav-link dropdown-toggle, show its dropdown-menu and hide others
+
+        $('.nav-link.dropdown-toggle').hover(function(){
+
+            $('.dropdown-menu').hide();
+
+            $(this).next('.dropdown-menu').show();
+
+        });
+
+
+
+        // When hovering over a dropdown-item dropdown-toggle, show its dropdown-menu and hide others
+
+        $('.dropdown-item.dropdown-toggle').hover(function(){
+
+            $(this).closest('.dropdown-menu').find('.dropdown-menu').hide();
+
+            $(this).next('.dropdown-menu').show();
+
+        });
+
+
+
+        // Hide dropdown menus when mouse is not hovering over any dropdown
+
+        $('.dropdown').mouseleave(function() {
+
+            $('.dropdown-menu').hide();
+
+        });
+
+    });
+
+</script>
+
+
+    <!--  <div class="header text-center">
+    <h1>Welcome to ADMIN Dashboard</h1>
+</div>
+
+ <a th:href="@{/Admin/Product}" class="btn btn-primary text-dark text-decoration-none">Products</a>
+
+
+
+ <a class="btn" style="background-color:#FF69B4; color: black;" href="/reportadmin"><b>Read Suggestions from Customers</b></a>
+
+<a th:href="@{/Admin/Deals}" class="btn btn-info text-dark text-decoration-none">Deals</a>
+
+
+<a th:href="@{/admin/orders}" class="btn btn-primary text-dark text-decoration-none">Orders</a>
+
+
+<a th:href="@{/addpopupimage}" class="btn btn-secondary text-light text-decoration-none">create popup</a>
+ -->
+
+
+
+    <div class="container-fluid ">
+        <div class="row">
+            <nav id="sidebarMenu"
+                class="col-md-3 col-lg-2 d-md-block  sidebar collapse"
+                style="background-image: radial-gradient(circle farthest-corner at 10% 20%, rgba(38, 51, 97, 1) 0%, rgba(65, 143, 222, 1) 79%);">
+                <div class="position-sticky pt-3">
+                    <ul class="sidebar nav flex-column">
+                        <button class="close-btn">&times;</button>
+                        <br>
+                        <li class="nav-item "><a class="nav-link active text-light"
+                            aria-current="page" href="/Dashboard"> <svg
+                                    xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                    fill="currentColor" class="bi bi-speedometer2"
+                                    viewBox="0 0 16 16">
+  <path
+                                        d="M8 4a.5.5 0 0 1 .5.5V6a.5.5 0 0 1-1 0V4.5A.5.5 0 0 1 8 4M3.732 5.732a.5.5 0 0 1 .707 0l.915.914a.5.5 0 1 1-.708.708l-.914-.915a.5.5 0 0 1 0-.707M2 10a.5.5 0 0 1 .5-.5h1.586a.5.5 0 0 1 0 1H2.5A.5.5 0 0 1 2 10m9.5 0a.5.5 0 0 1 .5-.5h1.5a.5.5 0 0 1 0 1H12a.5.5 0 0 1-.5-.5m.754-4.246a.39.39 0 0 0-.527-.02L7.547 9.31a.91.91 0 1 0 1.302 1.258l3.434-4.297a.39.39 0 0 0-.029-.518z" />
+  <path fill-rule="evenodd"
+                                        d="M0 10a8 8 0 1 1 15.547 2.661c-.442 1.253-1.845 1.602-2.932 1.25C11.309 13.488 9.475 13 8 13c-1.474 0-3.31.488-4.615.911-1.087.352-2.49.003-2.932-1.25A8 8 0 0 1 0 10m8-7a7 7 0 0 0-6.603 9.329c.203.575.923.876 1.68.63C4.397 12.533 6.358 12 8 12s3.604.532 4.923.96c.757.245 1.477-.056 1.68-.631A7 7 0 0 0 8 3" />
+</svg> <span data-feather="home"></span> Dashboard
+                        </a></li>
+                        <li class="nav-item"><a class="nav-link text-light"
+                            th:href="@{/admin/orders}"> <svg
+                                    xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                    fill="currentColor" class="bi bi-file-earmark-bar-graph"
+                                    viewBox="0 0 16 16">
+  <path
+                                        d="M10 13.5a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-6a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5zm-2.5.5a.5.5 0 0 1-.5-.5v-4a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-.5.5zm-3 0a.5.5 0 0 1-.5-.5v-2a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5z" />
+  <path
+                                        d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2M9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5z" />
+</svg> <span data-feather="file"></span> Orders
+                        </a></li>
+                        <li class="nav-item "><a class="nav-link text-light"
+                            th:href="@{/Admin/Product}" href="#"> <svg
+                                    xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                    fill="currentColor" class="bi bi-cart4" viewBox="0 0 16 16">
+  <path
+                                        d="M0 2.5A.5.5 0 0 1 .5 2H2a.5.5 0 0 1 .485.379L2.89 4H14.5a.5.5 0 0 1 .485.621l-1.5 6A.5.5 0 0 1 13 11H4a.5.5 0 0 1-.485-.379L1.61 3H.5a.5.5 0 0 1-.5-.5M3.14 5l.5 2H5V5zM6 5v2h2V5zm3 0v2h2V5zm3 0v2h1.36l.5-2zm1.11 3H12v2h.61zM11 8H9v2h2zM8 8H6v2h2zM5 8H3.89l.5 2H5zm0 5a1 1 0 1 0 0 2 1 1 0 0 0 0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0m9-1a1 1 0 1 0 0 2 1 1 0 0 0 0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0" />
+</svg> <span data-feather="shopping-cart"></span> Products
+                        </a></li>
+                        <li class="nav-item"><a class="nav-link text-light"
+                            th:href="@{deals/addProductDeal}" href="#"> <svg
+                                    xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                    fill="currentColor" class="bi bi-lightning-charge"
+                                    viewBox="0 0 16 16">
+  <path
+                                        d="M11.251.068a.5.5 0 0 1 .227.58L9.677 6.5H13a.5.5 0 0 1 .364.843l-8 8.5a.5.5 0 0 1-.842-.49L6.323 9.5H3a.5.5 0 0 1-.364-.843l8-8.5a.5.5 0 0 1 .615-.09zM4.157 8.5H7a.5.5 0 0 1 .478.647L6.11 13.59l5.732-6.09H9a.5.5 0 0 1-.478-.647L9.89 2.41z" />
+</svg> <span data-feather="shopping-cart"></span> Add Deals
+                        </a></li>
+                        <li class="nav-item"><a class="nav-link text-light"
+                            href="/reportadmin"> <svg xmlns="http://www.w3.org/2000/svg"
+                                    width="16" height="16" fill="currentColor"
+                                    class="bi bi-envelope-check" viewBox="0 0 16 16">
+  <path
+                                        d="M2 2a2 2 0 0 0-2 2v8.01A2 2 0 0 0 2 14h5.5a.5.5 0 0 0 0-1H2a1 1 0 0 1-.966-.741l5.64-3.471L8 9.583l7-4.2V8.5a.5.5 0 0 0 1 0V4a2 2 0 0 0-2-2zm3.708 6.208L1 11.105V5.383zM1 4.217V4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v.217l-7 4.2z" />
+  <path
+                                        d="M16 12.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0m-1.993-1.679a.5.5 0 0 0-.686.172l-1.17 1.95-.547-.547a.5.5 0 0 0-.708.708l.774.773a.75.75 0 0 0 1.174-.144l1.335-2.226a.5.5 0 0 0-.172-.686" />
+</svg> <span data-feather="users"></span> Feedbacks
+                        </a></li>
+                        <li class="nav-item"><a class="nav-link text-light"
+                            href="/reportadmin"> <svg xmlns="http://www.w3.org/2000/svg"
+                                    width="16" height="16" fill="currentColor"
+                                    class="bi bi-graph-up" viewBox="0 0 16 16">
+  <path fill-rule="evenodd"
+                                        d="M0 0h1v15h15v1H0zm14.817 3.113a.5.5 0 0 1 .07.704l-4.5 5.5a.5.5 0 0 1-.74.037L7.06 6.767l-3.656 5.027a.5.5 0 0 1-.808-.588l4-5.5a.5.5 0 0 1 .758-.06l2.609 2.61 4.15-5.073a.5.5 0 0 1 .704-.07" />
+</svg> <span data-feather="bar-chart-2"></span> Reports
+                        </a></li>
+
+
+
+
+                        <li class="nav-item"><a class="nav-link text-light"
+                            href="/showpopup" data-toggle="popover" title="Popover Title"
+                            data-content="Popover Content"> <svg
+                                    xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                    fill="currentColor" class="bi bi-info-circle"
+                                    viewBox="0 0 16 16">
+            <path
+                                        d="M8 1.5a6.5 6.5 0 1 1 0 13 6.5 6.5 0 0 1 0-13zm0 10a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm-.93-3.306a.133.133 0 0 0 .133-.132c0-.073-.06-.133-.133-.133a.133.133 0 0 0-.133.133c0 .073.06.132.133.132zm1.4 1.85a.656.656 0 1 0 0 1.313.656.656 0 0 0 0-1.313z" />
+        </svg> <span data-feather="file"></span> Popups
+                        </a></li>
+
+                       
+                       
+
+
+ <li class="nav-item">
+        <a class="nav-link text-light" th:href="@{/Admin/Adminfooter}" href="#">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-globe" viewBox="0 0 16 16">
+            <path d="M0 8a8 8 0 1 0 16 0A8 8 0 0 0 0 8zm8-7a7 7 0 1 1 0 14A7 7 0 0 1 8 1z"/>
+            <path d="M7.5 1.018a7.08 7.08 0 0 0-1.47 1.15c.326.38.621.814.868 1.285.2.378.389.772.548 1.18.228.596.406 1.244.504 1.89H5.7c-.66 0-1.315-.03-1.962-.088C3.46 5.828 3.168 5.017 3 4.285a7.04 7.04 0 0 1 4.5-3.267zM2.588 8c-.117-.687-.168-1.392-.15-2.092a30.82 30.82 0 0 1 1.33.159c.69.067 1.395.11 2.1.125a6.916 6.916 0 0 0-.376 1.936c-.23.618-.383 1.26-.454 1.902H2.588zm3.91 6.486a7.04 7.04 0 0 1-1.086-1.25 4.896 4.896 0 0 1-.714-1.674c.24-.042.48-.083.724-.127.19-.035.382-.071.572-.106a5.83 5.83 0 0 1-.215.61c-.155.38-.327.747-.518 1.095a6.921 6.921 0 0 0 1.5 1.452zm.024-7.06c.054.568.184 1.13.376 1.676.144.42.317.834.518 1.237.062-.246.136-.49.215-.73.252-.731.578-1.45.96-2.12.48-.837 1.09-1.6 1.81-2.25-.008.01-.015.02-.023.03a4.983 4.983 0 0 0-1.262.393c-.557.235-1.08.524-1.567.852-.322.222-.628.47-.915.738a3.068 3.068 0 0 0-.122.09zm7.64 5.07a6.919 6.919 0 0 0-1.41-2.193c-.2.292-.428.568-.68.833a6.917 6.917 0 0 0 1.166 1.696c.39-.152.755-.346 1.1-.566.1-.065.195-.133.295-.2l-.47-.57zm-.474-.926c-.414-.418-.849-.818-1.302-1.197-.498-.414-1.023-.775-1.573-1.085a6.88 6.88 0 0 0-.874-.388c-.545-.218-1.105-.392-1.675-.517a6.926 6.926 0 0 0-.697-.108 6.961 6.961 0 0 0 1.237 1.037c.606.36 1.183.769 1.72 1.214a7.091 7.091 0 0 0 1.646.892 7.1 7.1 0 0 0 1.518-.769zM11.927 1.48a6.92 6.92 0 0 0-1.107 1.98c.02.083.04.168.059.253a6.927 6.927 0 0 0 1.3.493c.617.188 1.227.408 1.827.66a6.92 6.92 0 0 0-.65-1.275 7.076 7.076 0 0 0-1.43-2.11zm1.635 6.517c.017.177.034.356.05.537.016.19.03.38.042.57.001.027.004.054.005.081a6.94 6.94 0 0 0-1.142-.207 7.082 7.082 0 0 0-.218-.747 5.998 5.998 0 0 0-.445-1.062c.31.155.614.337.915.544.283.186.56.393.826.62.038.033.075.067.11.1l.032.031zm-5.172 3.403a6.967 6.967 0 0 0 .175 1.445c.12-.03.24-.06.36-.09.185-.047.37-.094.555-.143.53-.134 1.056-.293 1.573-.478a6.914 6.914 0 0 0-.464-.662c-.19-.22-.386-.432-.589-.636a5.98 5.98 0 0 0-1.367-.849 7.07 7.07 0 0 0-1.246-.242zm1.51-10.204c-.04-.137-.082-.273-.125-.408A6.958 6.958 0 0 0 8 1.318c-.555.004-1.104.033-1.646.086-.093.008-.186.018-.279.027.055.13.11.26.164.392a6.99 6.99 0 0 0 1.797.096 6.925 6.925 0 0 0 1.552-.367c.063-.018.126-.037.188-.056.013-.003.027-.007.04-.01zm-4.385 7.07a5.957 5.957 0 0 0-.1-.674 6.93 6.93 0 0 0-.782-1.85 7.047 7.047 0 0 0-1.015-1.5c-.015-.016-.03-.03-.045-.046.038-.026.076-.053.114-.08.57-.4 1.153-.772 1.753-1.114.35-.195.702-.375 1.057-.54-.35.333-.683.68-1.004 1.043-.558.627-1.079 1.31-1.56 2.035a6.936 6.936 0 0 0-.457.983 6.97 6.97 0 0 0-.516 2.206zm.786 6.217a6.925 6.925 0 0 0 .422-1.526c.017-.118.033-.237.05-.355-.14.046-.278.095-.418.142a6.933 6.933 0 0 0-.485.204 6.935 6.935 0 0 0-.835.46 6.927 6.927 0 0 0 1.266.37z"/>
+          </svg>
+          <span data-feather="website"></span>  Footer
+        </a>
+      </li>       
+      </ul>
+
+                    <h6
+                        class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                        <span class="text-dark">Saved reports</span> <a
+                            class="link-secondary" href="#" aria-label="Add a new report">
+                            <span data-feather="plus-circle"></span>
+                        </a>
+                    </h6>
+                   
+
+                    <ul class="nav flex-column mb-2">
+                        <li class="nav-item"><a class="nav-link text-light" href="#">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                    fill="currentColor" class="bi bi-file-earmark-text"
+                                    viewBox="0 0 16 16">
+  <path
+                                        d="M5.5 7a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zM5 9.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5m0 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5" />
+  <path
+                                        d="M9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.5zm0 1v2A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1z" />
+</svg> <span data-feather="file-text"></span> Current month
+                        </a></li>
+                        <li class="nav-item"><a class="nav-link text-light" href="#">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                    fill="currentColor" class="bi bi-file-earmark-text"
+                                    viewBox="0 0 16 16">
+  <path
+                                        d="M5.5 7a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zM5 9.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5m0 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5" />
+  <path
+                                        d="M9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.5zm0 1v2A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1z" />
+</svg> <span data-feather="file-text"></span> Last quarter
+                        </a></li>
+                        <li class="nav-item"><a class="nav-link text-light" href="#">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                    fill="currentColor" class="bi bi-file-earmark-text"
+                                    viewBox="0 0 16 16">
+  <path
+                                        d="M5.5 7a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zM5 9.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5m0 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5" />
+  <path
+                                        d="M9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.5zm0 1v2A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1z" />
+</svg> <span data-feather="file-text"></span> Social engagement
+                        </a></li>
+                        <li class="nav-item"><a class="nav-link text-light" href="#">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                    fill="currentColor" class="bi bi-file-earmark-text"
+                                    viewBox="0 0 16 16">
+  <path
+                                        d="M5.5 7a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zM5 9.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5m0 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5" />
+  <path
+                                        d="M9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.5zm0 1v2A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1z" />
+</svg> <span data-feather="file-text"></span> Year-end sale
+                        </a></li>
+                    </ul>
+                </div>
+            </nav>
+
+
+
+
+
+
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div class="dashboard ">
+
+                    <div
+                        class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3  border-bottom">
+                        <!--  <h1 class="h2">Dashboard</h1> -->
+                        <div class="content ">
+                            <button class="open-btn">Dashboard</button>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="card"
+                                style="background-image: radial-gradient(circle farthest-corner at 10% 20%, rgba(97, 186, 255, 1) 0%, rgba(166, 239, 253, 1) 90.1%);">
+                                <div class="card-body">
+                                    <h5 class="card-title text-center" href="/count">Total
+                                        Orders</h5>
+                                    <p id="totalOrders" class="text-center "
+                                        style="font-size: 29px; font-weight: 700;"></p>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card"
+                                style="background-image: linear-gradient(109.6deg, rgba(102, 203, 149, 1) 11.2%, rgba(39, 210, 175, 1) 98.7%);">
+                                <div class="card-body">
+                                    <h5 class="card-title text-center">Total Users</h5>
+                                    <p id="totalUsers" class="text-center "
+                                        style="font-size: 29px; font-weight: 700;"></p>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card"
+                                style="background-image: radial-gradient(circle farthest-corner at 10% 20%, rgba(255, 236, 231, 1) 0%, rgba(255, 143, 108, 1) 90.1%);">
+                                <div class="card-body">
+                                    <h5 class="card-title text-center">Sales Count</h5>
+                                    <p class=" mb-2 fw-bold text-center"
+                                        style="font-size: 29px; font-weight: 700;">
+                                        Rs.<span id="totalSales">Loading...</span>
+                                    </p>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card"
+                                style="background-image: radial-gradient(circle farthest-corner at 10% 20%, rgba(97, 186, 255, 1) 0%, rgba(166, 239, 253, 1) 90.1%);">
+                                <div class="card-body">
+                                    <h5 class="card-title">Top Selling products</h5>
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>Product Name</th>
+                                                <th>Total Quantity Sold</th>
+                                                <th>Total Amount Sold</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="topSellingProductsBody">
+
+                                            <table>
+                                                <!--   <thead>
+            <tr>
+                <th>Product Name</th>
+                <th>Total Quantity</th>
+                <th>Total Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="product : ${topSellingProducts}">
+                <td th:text="${product[0]}"></td>
+                <td th:text="${product[1]}"></td>
+                <td th:text="${product[2]}"></td>
+            </tr>
+            -->
+                                                <!-- JavaScript will populate this table -->
+                                                </tbody>
+                                            </table>
+
+                                            </div>
+                                            </div>
+                                            </div>
+                                            </div>
+                                            <br>
+                                            <br>
+
+                                            <div class="container bg-dark">
+
+
+                                                <script
+                                                    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+                                                    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+                                                    crossorigin="anonymous"></script>
+
+
+                                                <center>
+                                                    <div class="popup">
+                                                        <div class="alert  alert-dismissible fade show w-50"
+                                                            style="background: #329cb4;" role="alert"
+                                                            th:each="image:${image}">
+                                                            <strong><h3>Welcome To MyMart</h3></strong> <br> <a
+                                                                th:href="@{/deletepopupimage(id=${image.id})}"
+                                                                class="btn btn-secondary text-light text-decoration-none">Delete</a>
+
+
+                                                            <center>
+                                                                <span class="showpopuplogo" href="/displaypopup">
+                                                                    <a class="btn" th:href="@{/editpopup(id=${image.id})}"><img
+                                                                        th:src="@{'/images/'+${image.popupimage}}"
+                                                                        style="width: 50%; height: 50%; background: transparent;"
+                                                                        alt="..."></a>
+                                                                </span>
+                                                            </center>
+
+
+
+
+                                                            <main>
+                                                                <div id="popupContainer" class="popup-container">
+                                                                    <div class="popup1">
+
+                                                                        <div class="discount">
+                                                                            <div class="description">
+                                                                                <i><h2 style="color: green;"
+                                                                                        th:text="${image.popupdata}"></h2></i>
+                                                                            </div>
+                                                                        </div>
+
+
+                                                                        <div class="discount">
+                                                                            <div class="description">
+                                                                                <i style="color: yellow;"
+                                                                                    th:text="${image.popupofferdata}"></i>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </main>
+
+                                                            <marquee
+                                                                style="background: transparent; color: red; height: 35px; padding: 2px; text-align: center;">
+                                                                <div class="discount">
+                                                                    <div class="description">
+                                                                        <b><i th:text="${image.popupmarqueedata}"></i></b>
+                                                                    </div>
+                                                                </div>
+                                                            </marquee>
+
+
+
+                                                            <button type="button " class="btn-close"
+                                                                data-dismiss="alert" aria-label="Close"></button>
+                                                        </div>
+                                                    </div>
+                                                </center>
+                                            </div>
+
+
+
+
+
+
+
+                                <br> <br>
+
+                                                     
+
+                                            <h2>Top selling products</h2>
+                                            <table>
+                                                <tr>
+                                                    <th>Product Name</th>
+                                                    <th>Brand</th>
+                                                    <th>Total Quantity Sold</th>
+                                                    <th>Order Total Amount</th>
+                                                    <th>Order Status</th>
+                                                    <th>Order Details</th>
+                                                </tr>
+                                                <tr th:each="productData : ${topProducts}">
+                                                    <td th:text="${productData[0].name}"></td>
+                                                    <td th:text="${productData[0].brand}"></td>
+                                                    <td th:text="${productData[1]}"></td>
+                                                    <td th:text="${productData[2]}"></td>
+                                                    <td th:text="${productData[3]}"></td>
+                                                    <td>
+                                                        <ul>
+                                                            <li th:each="orderItem : ${productData[4].orderItems}"
+                                                                th:text="${orderItem.product.name} + ' (Quantity: ' + ${orderItem.quantity} + ')'"></li>
+                                                        </ul>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                            <!--   <div class="table-responsive ">
+        <table class="table table-striped table-sm ">
+          <thead>
+            <tr>
+              <th scope="col">Product Id</th>
+              <th scope="col">Product Name</th>
+              <th scope="col">Original price</th>
+              <th scope="col">Discount percentage</th>
+              <th scope="col">Order status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1,001</td>
+              <td>Tv</td>
+              <td>20000</td>
+              <td>20%</td>
+              <td>Confirm</td>
+            </tr>
+
+
+          </tbody>
+        </table>
+        -->
+                                            </div>
+                                            </div>
+                                            </main>
+
+                                            </div>
+                                            </div>
+
+
+
+
+
+
+
+
+                                            <script>
+    document.addEventListener('DOMContentLoaded', () => {
+
+        const openBtn = document.querySelector('.open-btn');
+        const closeBtn = document.querySelector('.close-btn');
+        const sidebar = document.querySelector('.sidebar');
+
+        openBtn.addEventListener('click', () => {
+            sidebar.style.left = '0';
+        });
+
+        closeBtn.addEventListener('click', () => {
+            sidebar.style.left = '-250px';
+        });
+
+
+    });
+    </script>
+
+
+
+
+                                            <script>
+  $(document).ready(function(){
+        // Hide all dropdown menus initially
+        $('.dropdown-menu').hide();
+
+        // When hovering over a nav-link dropdown-toggle, show its dropdown-menu and hide others
+        $('.nav-link.dropdown-toggle').hover(function(){
+            $('.dropdown-menu').hide();
+            $(this).next('.dropdown-menu').show();
+        });
+
+        // When hovering over a dropdown-item dropdown-toggle, show its dropdown-menu and hide others
+        $('.dropdown-item.dropdown-toggle').hover(function(){
+            $(this).closest('.dropdown-menu').find('.dropdown-menu').hide();
+            $(this).next('.dropdown-menu').show();
+        });
+
+        // Hide dropdown menus when mouse is not hovering over any dropdown
+        $('.dropdown').mouseleave(function() {
+            $('.dropdown-menu').hide();
+        });
+    });
+
+
+
+
+</script>
+                                            <script>
+        // Fetch total orders
+        fetch('/total')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('totalOrders').textContent = data;
+            })
+            .catch(error => {
+                console.error('Error fetching total orders:', error);
+            });
+    </script>
+                                            <script>
+
+
+    fetch('/count')
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById('totalUsers').textContent = data;
+    })
+    .catch(error => {
+        console.error('Error fetching total orders:', error);
+    });
+        </script>
+
+                                            <script>
+        // Fetch total Sales
+        fetch('/totalsales')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('totalSales').textContent = data;
+            })
+            .catch(error => {
+                console.error('Error fetching total Sales:', error);
+            });
+    </script>
+
+
+                                            <script>
+        // Fetch top selling products
+        fetch('/topsellingproducts')
+            .then(response => response.json())
+            .then(data => {
+                const topSellingProductsBody = document.getElementById('topSellingProductsBody');
+                data.forEach(product => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `<td>${product[0]}</td><td>${product[1]}</td><td>${product[2]}</td>`;
+                    topSellingProductsBody.appendChild(row);
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching top selling products:', error);
+            });
+    </script>
+</body>
+</html>
+

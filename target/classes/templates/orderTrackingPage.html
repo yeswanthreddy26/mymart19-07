@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>MyMart - Track Order</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <!-- Add your custom CSS styles here if needed -->
+    <style>
+        body {
+            background-color: #f2f2f2; /* Set background color for the body */
+            padding-top: 50px; /* Add some padding to the top */
+            background-image: url("/test.png");
+            background-repeat: no-repeat; /* Prevent the background image from repeating */
+            background-size: cover; /* Adjust the background size to cover the entire element */
+            background-position: center; /* Center the background image */
+        }
+        .order-details {
+            background-color: lightblue; /* Set background color for the order details section */
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0,0,0,0.1); /* Add shadow effect with reduced blur radius */
+            margin: 20px auto; /* Center the section horizontally */
+            max-width: 400px; /* Limit the width */
+            text-align: center; /* Center align the content */
+        }
+        .product-image {
+            display: block;
+            margin: 0 auto 20px; /* Center the product image */
+            max-width: 150px; /* Adjust the maximum width of the product image */
+            height: auto; /* Maintain aspect ratio */
+        }
+        .order-details p {
+            margin-bottom: 5px; /* Add some bottom margin */
+        }
+        .progress-container {
+            position: relative; /* Make the container position relative */
+            margin-bottom: 10px; /* Reduce margin to make it smaller */
+            width: 50%; /* Adjust the width of the progress bar container */
+            margin: 0 auto; /* Center the progress container */
+        }
+        .bike-icon {
+            position: absolute; /* Make the bike icon position absolute */
+            top: 50%; /* Position it in the middle vertically */
+            transform: translateY(-50%); /* Adjust to center it vertically */
+            left: 0; /* Initial position at the start of progress bar */
+            width: 30px; /* Adjust the size of the icon */
+            height: 30px;
+            background-image: url("/bike1.png"); /* Path to your bike icon */
+            background-size: contain;
+            background-repeat: no-repeat;
+        }
+
+        /* Animation for progress moving effect */
+        @keyframes moveProgress {
+            0% {
+                width: 0;
+            }
+            100% {
+                width: 100%;
+            }
+        }
+
+        .progress {
+            animation: moveProgress 2s linear forwards; /* Apply the animation */
+        }
+
+        /* Animation for progress-bar-striped */
+        @keyframes stripeAnimation {
+            0% {
+                background-position: 40px 0;
+            }
+            100% {
+                background-position: 0 0;
+            }
+        }
+
+        .progress-bar-striped {
+            background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+            background-size: 40px 40px; /* Adjust the size of the stripes */
+            animation: stripeAnimation 1s linear infinite; /* Apply the animation */
+        }
+    </style>
+</head>
+<body>
+    <center><h1>Order Tracking</h1></center>
+    <div class="order-details" th:if="${orders}">
+        <!-- Display product image and link -->
+        <div th:each="item : ${orders.orderItems}">
+            <a th:href="@{/cart/viewproduct(id=${item.product.id})}">
+                <img th:src="@{'/images/' + ${item.product.imageFileName}}" class="img-fluid product-image" alt="Product Image">
+            </a>
+            <p>Product Name: <span th:text="${item.product.name}"></span></p>
+            <p>Quantity: <span th:text="${item.quantity}"></span></p>
+            <p>Price: $<span th:text="${item.product.price}"></span></p>
+            <p>Total Price: $<span th:text="${item.totalPrice}"></span></p>
+        </div>
+        <p>Order Number: <span th:text="${orders.orderNumber}"></span></p>
+        <p>Order Date: <span th:text="${orders.orderDate}"></span></p>
+        <p>Total Amount: $<span th:text="${orders.totalAmount}"></span></p>
+        <!-- Add more order details as needed -->
+
+        <h2>Order Status</h2>
+        <p>Status: <span id="orderStatus" th:text="${orders.status}"></span></p>
+        
+        <!-- Progress bar container -->
+        <div class="progress-container">
+            <!-- Bike icon -->
+            <div id="bikeIcon" class="bike-icon"></div>
+            <!-- Progress bar -->
+            <div class="progress">
+                <div id="progressBar" class="progress-bar progress-bar-striped" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            var orderStatus = $("#orderStatus").text().trim();
+            var progressBar = $("#progressBar");
+            var bikeIcon = $("#bikeIcon");
+
+            // Set progress bar width and color based on order status
+            switch (orderStatus) {
+                case "PLACED":
+                    progressBar.addClass("bg-primary"); // Blue color for PLACED
+                    progressBar.css("width", "25%");
+                    bikeIcon.css("left", "25%"); // Move bike icon to 25% progress
+                    break;
+                case "ACCEPTED":
+                    progressBar.addClass("bg-info"); // Cyan color for ACCEPTED
+                    progressBar.css("width", "50%");
+                    bikeIcon.css("left", "50%"); // Move bike icon to 50% progress
+                    break;
+                case "SHIPPED":
+                    progressBar.addClass("bg-warning"); // Yellow color for SHIPPED
+                    progressBar.css("width", "75%");
+                    bikeIcon.css("left", "75%"); // Move bike icon to 75% progress
+                    break;
+                case "DELIVERED":
+                    progressBar.addClass("bg-success"); // Green color for DELIVERED
+                    progressBar.css("width", "100%");
+                    bikeIcon.css("left", "100%"); // Move bike icon to 100% progress
+                    break;
+                default:
+                    progressBar.css("width", "0%");
+                    bikeIcon.css("left", "0%");
+            }
+        });
+    </script>
+</body>
+</html>

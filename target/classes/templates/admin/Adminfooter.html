@@ -1,0 +1,448 @@
+<!doctype html>
+
+<html lang="en">
+
+  <head>
+
+    <meta charset="utf-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>My Mart</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+<style>
+body
+        {
+        	background-color:#F7DC6F;
+        }
+</style>
+  </head>
+
+  <body>
+
+  <div class = "container">
+
+  <h1 class = "text-center my-4">Create/Edit Footer Page</h1>
+
+  <a class="btn btn-primary" href="/Admin/createfooter"> create footer</a>
+ 
+
+  <table class="table">
+
+  <thead>
+
+  <tr>
+
+  <th>Id</th>
+
+  <th>ADOUT US</th>
+
+  <th>Action</th>
+
+  </tr>
+
+  </thead>
+
+  
+
+  <tbody>
+
+  <tr th:each="aboutus : ${aboutus}">
+
+  <td th:text="${aboutus.id}"></td>
+
+ 
+
+  <td th:text="${aboutus.aboutus}"></td>
+
+  
+
+   <td style="white-space:nowrap">
+
+   <a class="btn btn-primary btn-sm" 
+
+   th:href="@{/Admin/editfooter(id=${aboutus.id})}">Edit</a>
+
+   <a class="btn btn-danger btn-sm" 
+
+   th:href="@{/Admin/deletefooter(id=${aboutus.id})}"
+
+   onclick="return confirm('Are u sure?')">Delete</a>
+
+   </td>
+
+   </tr>
+
+   </tbody>
+
+   </table>
+
+   </div>
+
+	<div class = "container">
+	
+	<a class="btn btn-primary" href="/Admin/createconsumerpolicy"> create footer</a>
+ 
+
+  <table class="table">
+
+  <thead>
+
+  <tr>
+
+  <th>Id</th>
+
+  <th>Consumer Policy</th>
+
+  <th>Action</th>
+
+  </tr>
+
+  </thead>
+
+  
+
+  <tbody>
+
+  <tr th:each="consumerpolicy : ${consumerpolicy}">
+
+  <td th:text="${consumerpolicy.id}"></td>
+
+ 
+
+  <td th:text="${consumerpolicy.consumerpolicy}"></td>
+
+  
+
+   <td style="white-space:nowrap">
+
+   <a class="btn btn-primary btn-sm" 
+
+   th:href="@{/Admin/editconsumerpolicy(id=${consumerpolicy.id})}">Edit</a>
+
+   <a class="btn btn-danger btn-sm" 
+
+   th:href="@{/Admin/deleteconsumerpolicy(id=${consumerpolicy.id})}"
+
+   onclick="return confirm('Are u sure?')">Delete</a>
+
+   </td>
+
+   </tr>
+
+   </tbody>
+
+   </table>
+
+   </div>
+   
+   
+   <div class = "container">
+	
+	<a class="btn btn-primary" href="/Admin/createcustomersupport"> create footer</a>
+ 
+
+  <table class="table">
+
+  <thead>
+
+  <tr>
+
+  <th>Id</th>
+
+  <th>Customer Support</th>
+
+  <th>Action</th>
+
+  </tr>
+
+  </thead>
+
+  
+
+  <tbody>
+
+  <tr th:each="customersupport : ${customersupport}">
+
+  <td th:text="${customersupport.id}"></td>
+
+ 
+
+  <td th:text="${customersupport.customersupport}"></td>
+
+  
+
+   <td style="white-space:nowrap">
+
+   <a class="btn btn-primary btn-sm" 
+
+   th:href="@{/Admin/editcustomersupport(id=${customersupport.id})}">Edit</a>
+
+   <a class="btn btn-danger btn-sm" 
+
+   th:href="@{/Admin/deletecustomersupport(id=${customersupport.id})}"
+
+   onclick="return confirm('Are u sure?')">Delete</a>
+
+   </td>
+
+   </tr>
+
+   </tbody>
+
+   </table>
+
+   </div>
+   
+<div class = "container">
+
+ 
+
+  <a class="btn btn-primary" href="/Admin/createdownloadapps"> create Downloadapps</a>
+ 
+
+  <table class="table">
+
+  <thead>
+
+  <tr>
+
+  <th>Id</th>
+
+  <th>IMAGE FILE NAME</th>
+
+  <th>Action</th>
+
+  </tr>
+
+  </thead>
+
+  
+
+  <tbody>
+
+  <tr th:each="downloadapps : ${downloadapps}">
+
+  <td th:text="${downloadapps.id}"></td>
+
+ 
+
+   <td>
+
+  <img th:src="@{'/images/'+${downloadapps.imageFileName}}" alt="..." width="100">
+
+  </td>
+
+
+  
+
+   <td style="white-space:nowrap">
+
+   <a class="btn btn-primary btn-sm" 
+
+   th:href="@{/Admin/editdownloadapps(id=${downloadapps.id})}">Edit</a>
+
+   <a class="btn btn-danger btn-sm" 
+
+   th:href="@{/Admin/deletedownloadapps(id=${downloadapps.id})}"
+
+   onclick="return confirm('Are u sure?')">Delete</a>
+
+   </td>
+
+   </tr>
+
+   </tbody>
+
+   </table>
+
+   </div>
+   
+   <div class = "container">
+
+  
+
+  <a class="btn btn-primary" href="/Admin/createkeepintouch"> create keepintouch</a>
+ 
+
+  <table class="table">
+
+  <thead>
+
+  <tr>
+
+  <th>Id</th>
+
+  <th>IMAGE FILE NAME</th>
+
+  <th>Action</th>
+
+  </tr>
+
+  </thead>
+
+  
+
+  <tbody>
+
+  <tr th:each="keepintouch : ${keepintouch}">
+
+  <td th:text="${keepintouch.id}"></td>
+
+ 
+
+   <td>
+
+  <img th:src="@{'/images/'+${keepintouch.imageFileName}}" alt="..." width="100">
+
+  </td>
+
+
+  
+
+   <td style="white-space:nowrap">
+
+   <a class="btn btn-primary btn-sm" 
+
+   th:href="@{/Admin/editkeepintouch(id=${keepintouch.id})}">Edit</a>
+
+   <a class="btn btn-danger btn-sm" 
+
+   th:href="@{/Admin/deletekeepintouch(id=${keepintouch.id})}"
+
+   onclick="return confirm('Are u sure?')">Delete</a>
+
+   </td>
+
+   </tr>
+
+   </tbody>
+
+   </table>
+
+   </div>
+   
+   <div class = "container">
+
+  
+
+  <a class="btn btn-primary" href="/Admin/createmailus"> create footer</a>
+ 
+
+  <table class="table">
+
+  <thead>
+
+  <tr>
+
+  <th>Id</th>
+
+  <th>MAIL US</th>
+
+  <th>Action</th>
+
+  </tr>
+
+  </thead>
+
+  
+
+  <tbody>
+
+  <tr th:each="mailus : ${mailus}">
+
+  <td th:text="${mailus.id}"></td>
+
+ 
+
+  <td th:text="${mailus.mailus}"></td>
+
+  
+
+   <td style="white-space:nowrap">
+
+   <a class="btn btn-primary btn-sm" 
+
+   th:href="@{/Admin/editmailus(id=${mailus.id})}">Edit</a>
+
+   <a class="btn btn-danger btn-sm" 
+
+   th:href="@{/Admin/deletemailus(id=${mailus.id})}"
+
+   onclick="return confirm('Are u sure?')">Delete</a>
+
+   </td>
+
+   </tr>
+
+   </tbody>
+
+   </table>
+
+   </div>
+   
+   <div class = "container">
+
+  
+
+  <a class="btn btn-primary" href="/Admin/createroaddress"> create footer</a>
+ 
+
+  <table class="table">
+
+  <thead>
+
+  <tr>
+
+  <th>Id</th>
+
+  <th>ROADDRESS</th>
+
+  <th>Action</th>
+
+  </tr>
+
+  </thead>
+
+  
+
+  <tbody>
+
+  <tr th:each="roaddress : ${roaddress}">
+
+  <td th:text="${roaddress.id}"></td>
+
+ 
+
+  <td th:text="${roaddress.roaddress}"></td>
+
+  
+
+   <td style="white-space:nowrap">
+
+   <a class="btn btn-primary btn-sm" 
+
+   th:href="@{/Admin/editroaddress(id=${roaddress.id})}">Edit</a>
+
+   <a class="btn btn-danger btn-sm" 
+
+   th:href="@{/Admin/deleteroaddress(id=${roaddress.id})}"
+
+   onclick="return confirm('Are u sure?')">Delete</a>
+
+   </td>
+
+   </tr>
+
+   </tbody>
+
+   </table>
+
+   </div>
+   
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+
+  </body>
+
+</html>

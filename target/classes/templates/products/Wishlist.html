@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Wishlist</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #343a40;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            background-color: #fff;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        li:hover {
+            transform: translateY(-3px);
+            transition: transform 0.3s ease;
+        }
+
+        .btn-group button {
+            margin-right: 5px;
+        }
+
+        .product-image {
+            max-width: 100px;
+            max-height: 100px;
+            margin-right: 10px;
+        }
+
+        .product-price {
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 5px;
+        }
+
+        .button-group button, .button-group a {
+            white-space: nowrap;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Your Wishlist</h1>
+        <ul class="wishlist-items">
+            <li th:each="item : ${wishlist}">
+                <div class="row align-items-center">
+                    <div class="col-sm-2">
+                        <img th:src="@{'/images/' + ${item.product.imageFileName}}" class="img-fluid" alt="Product Image">
+                    </div>
+                    <div class="col-sm-6" style="margin-right: -10%;">
+                        <span th:text="${item.product.name}"></span>
+                    </div>
+                    <div class="col-sm-2" style="margin-right: -2%;">
+                        <span class="product-price" th:if="${item.product.discountedPrice != null}" th:text="${'Price: $' + item.product.discountedPrice}"></span>
+                        <span class="product-price" th:unless="${item.product.discountedPrice != null}" th:text="${'Price: $' + item.product.price}"></span>
+                    </div>
+                    <div class="col-sm-2 text-right">
+                        <div class="button-group">
+                            <form th:action="@{/wishlist/remove}" method="post" style="display:inline;">
+                                <input type="hidden" name="productId" th:value="${item.product.id}" />
+                                <button type="submit" class="btn btn-danger">Remove</button>
+                            </form>
+                            <form th:action="@{/cart/add}" method="post">
+                                <input type="hidden" name="productId" th:value="${item.product.id}">
+                                <!-- <div class="mb-3">
+                                    <label for="quantity" class="form-label">Quantity:</label>
+                                    <input type="number" class="form-control" id="quantity" name="quantity" value="1" min="1">
+                                </div> -->
+                                <button type="submit" class="btn btn-warning col-md-12">Add to Cart</button>
+                            </form>
+                            <a type="button" th:href="@{/buynow(id=${item.product.id})}" class="btn btn-success custom-button" th:text="'Buy Now'">Buy Now</a>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+    
+    <!-- google languages script -->
+    <script type="text/javascript"> 
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({pageLanguage: 'en'}, 'google_translate_element');
+        }
+    </script>
+    <script>
+        $(document).ready(function(){
+            // Hide all dropdown menus initially
+            $('.dropdown-menu').hide();
+
+            // When hovering over a nav-link dropdown-toggle, show its dropdown-menu and hide others
+            $('.nav-link.dropdown-toggle').hover(function(){
+                $('.dropdown-menu').hide();
+                $(this).next('.dropdown-menu').show();
+            });
+
+            // When hovering over a dropdown-item dropdown-toggle, show its dropdown-menu and hide others
+                $('.dropdown-item.dropdown-toggle').hover(function(){
+                $(this).closest('.dropdown-menu').find('.dropdown-menu').hide();
+                $(this).next('.dropdown-menu').show();
+            });
+
+            // Hide dropdown menus when mouse is not hovering over any dropdown
+            $('.dropdown').mouseleave(function() {
+                $('.dropdown-menu').hide();
+            });
+        });
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+</body>
+</html>
